@@ -3,14 +3,14 @@
   "version": "1.0",
   "data": "data.json",
   "logo": {
-    "file": "",
-    "link": "https://files.catbox.moe/qnla7x.png",
-    "text": ""
+    "file": "https://files.catbox.moe/qnla7x.png",
+    "link": "",
+    "text": "shadow01148"
   },
   "text": {
-    "more": "",
-    "intro": "Welcome to the Atlas! Please use your discord username when using the search query, not your username!",
-    "title": "Mentions Graph for General!"
+    "more": "Please use your Discord username, and not your PCC username!",
+    "intro": "Welcome to the PCC Atlas! ",
+    "title": "PCC Atlas"
   },
   "legend": {
     "edgeLabel": "",
