@@ -3,13 +3,13 @@
   "version": "1.0",
   "data": "data.json",
   "logo": {
-    "file": "https://files.catbox.moe/2uv5fx.png",
+    "file": "https://files.catbox.moe/5zin9q.png",
     "link": "",
     "text": "shadow01148"
   },
   "text": {
     "more": "Please use your Discord username, and not your PCC username!",
-    "intro": "Welcome to the PCC Atlas! ",
+    "intro": "Welcome to the PCC Atlas! Please use your Discord username, and not your PCC username!",
     "title": "PCC Atlas"
   },
   "legend": {
