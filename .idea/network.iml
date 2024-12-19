@@ -7,5 +7,7 @@
     <orderEntry type="library" name="jquery-3.7.1" level="application" />
     <orderEntry type="library" name="@fancyapps/ui" level="application" />
     <orderEntry type="library" name="fancybox" level="application" />
+    <orderEntry type="library" name="graphology" level="application" />
+    <orderEntry type="library" name="sigma" level="application" />
   </component>
 </module>
