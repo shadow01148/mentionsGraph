@@ -3,9 +3,23 @@
 
 <head>
 <title>PCC Atlas</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>PCC Atlas</title>
+
+  <meta property="og:title" content="PCC Atlas" />
+  <meta property="og:description" content="Explore the PCC Atlas with detailed networks and connections" />
+  <meta property="og:image" content="https://files.catbox.moe/lf7wna.png" />
+  <meta property="og:url" content="https://your-website-url.com" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:title" content="PCC Atlas" />
+  <meta name="twitter:description" content="Explore the PCC Atlas with detailed networks and connections" />
+  <meta name="twitter:image" content="https://files.catbox.moe/lf7wna.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="https://files.catbox.moe/lf7wna.png" type="image/png" />
 
     <script
             src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -13,10 +27,14 @@
             crossorigin="anonymous"></script>
   <script src="js/sigma/sigma.min.js" type="text/javascript" language="javascript"></script>
     <script src="js/sigma/sigma.parseJson.js" type="text/javascript" language="javascript"></script>
-  <script src="js/fancybox/jquery.fancybox.pack.js" type="text/javascript" language="javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js"></script>
+
+
+
   <script src="js/main.js" type="text/javascript" language="javascript"></script>
 
-  <link rel="stylesheet" type="text/css" href="js/fancybox/jquery.fancybox.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" />
+
   <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
   <link rel="stylesheet" media="screen and (max-height: 770px)" href="css/tablet.css" />
 </head>
@@ -34,7 +52,8 @@
     <div class="b1">
     <form>
       <div id="search" class="cf"><h2>Search:</h2>
-        <input type="text" name="search" value="Search by name" class="empty"/><div class="state"></div>
+          <input type="text" name="search" placeholder="Search by name" class="empty"/>
+          <div class="state"></div>
         <div class="results"></div>
       </div>
       <div class="cf" id="attributeselect"><h2>Group Selector:</h2>
