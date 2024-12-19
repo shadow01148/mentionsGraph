@@ -56,7 +56,7 @@ function setupGraph(data) {
         graph.addEdge(edge.source, edge.target, {
             color: edge.color || '#000',
             size: edge.size || 1,
-            type: edge.type
+            type: edge.type || 'line'
         });
     });
 
@@ -64,164 +64,41 @@ function setupGraph(data) {
     setupEvents(); // Set up events like click and hover for node
 }
 
-function highlightNode(nodeId) {
-    console.log(`Highlighting node: ${nodeId}`);
-    const node = sigmaInstance.graph.nodes(nodeId);
-    if (node) {
-        node.color = 'red'; // Example of color change, can be customized
-        sigmaInstance.refresh();
-    }
-}
-
-// Function to reset node highlight
-function resetNodeHighlight(nodeId) {
-    console.log(`Resetting highlight for node: ${nodeId}`);
-    const node = sigmaInstance.graph.nodes(nodeId);
-    if (node) {
-        node.color = 'blue'; // Reset to original color
-        sigmaInstance.refresh();
-    }
-}
-
-// Function to open node details
-function openNodeDetails(nodeId) {
-    console.log(`Opening details for node: ${nodeId}`);
-    // Add logic to open details (e.g., open modal, update UI, etc.)
-}
-
-// Function to handle zoom on node
-function handleNodeZoom(nodeId, zoomLevel) {
-    console.log(`Zooming on node: ${nodeId} with zoom level: ${zoomLevel}`);
-    // Add zooming logic here (e.g., adjust node size, camera zoom, etc.)
-}
-
-// Function to highlight an edge
-function highlightEdge(edgeId) {
-    console.log(`Highlighting edge: ${edgeId}`);
-    const edge = sigmaInstance.graph.edges(edgeId);
-    if (edge) {
-        edge.color = 'green'; // Example of color change for edge
-        sigmaInstance.refresh();
-    }
-}
-
-// Function to reset edge highlight
-function resetEdgeHighlight(edgeId) {
-    console.log(`Resetting highlight for edge: ${edgeId}`);
-    const edge = sigmaInstance.graph.edges(edgeId);
-    if (edge) {
-        edge.color = 'gray'; // Reset to original color
-        sigmaInstance.refresh();
-    }
-}
-
-// Function to open edge details
-function openEdgeDetails(edgeId) {
-    console.log(`Opening details for edge: ${edgeId}`);
-    // Add logic to open edge details (e.g., display edge info)
-}
-
-// Function to handle zoom on edge
-function handleEdgeZoom(edgeId, zoomLevel) {
-    console.log(`Zooming on edge: ${edgeId} with zoom level: ${zoomLevel}`);
-    // Add zoom logic for edges (if needed)
-}
-
-// Function to reset all highlights (on stage click)
-function resetAllHighlights() {
-    console.log('Resetting all highlights');
-    sigmaInstance.graph.nodes().forEach(node => {
-        node.color = 'blue'; // Reset all nodes to default color
-    });
-    sigmaInstance.graph.edges().forEach(edge => {
-        edge.color = 'gray'; // Reset all edges to default color
-    });
-    sigmaInstance.refresh();
-}
-
-// Function to handle stage zoom (on stage wheel)
-function handleStageZoom(zoomLevel) {
-    console.log(`Handling zoom on stage with level: ${zoomLevel}`);
-    // Add logic for overall stage zoom (e.g., zoom camera)
-    const camera = sigmaInstance.camera;
-    const currentZoom = camera.ratio;
-    camera.ratio = currentZoom - zoomLevel * 0.05; // Adjust the zoom ratio
-    sigmaInstance.refresh();
-}
-
-
 function setupEvents() {
     // Node click event
-// Handling click on node
-    sigmaInstance.on('clickNode', ({ node, originalEvent }) => {
-        if (node && node.id) {
-            const nodeId = node.id;
-            // Open node details
-            openNodeDetails(nodeId);
-        }
+    sigmaInstance.on('node:click', (event) => {
+        const node = event.node;
+        console.log(`Node clicked: ${node.id}`);
+        // Handle node click
+        alert(`Node clicked: ${node.id}`);
     });
 
-// Handling enter on node (e.g., highlighting it)
-    sigmaInstance.on('enterNode', ({ node }) => {
-        if (node && node.id) {
-            // Highlight the node
-            highlightNode(node.id);
-        }
+    // Node hover in event
+    sigmaInstance.on('node:enter', (event) => {
+        const node = event.node;
+        console.log(`Node hovered: ${node.id}`);
+        // Handle hover behavior
+        document.getElementById('tooltip').innerHTML = `Node: ${node.id}`;
     });
 
-// Handling leave on node (e.g., resetting highlight)
-    sigmaInstance.on('leaveNode', ({ node }) => {
-        if (node && node.id) {
-            // Reset highlight on node
-            resetNodeHighlight(node.id);
-        }
+    // Node hover out event
+    sigmaInstance.on('node:leave', (event) => {
+        const node = event.node;
+        console.log(`Node hover out: ${node.id}`);
+        // Handle hover out behavior
+        document.getElementById('tooltip').innerHTML = '';
     });
 
-// Handling wheel event on node (e.g., zoom or pan)
-    sigmaInstance.on('wheelNode', ({ node, originalEvent }) => {
-        if (node && node.id) {
-            const zoomLevel = originalEvent.deltaY;
-            // Handle zoom for the specific node
-            handleNodeZoom(node.id, zoomLevel);
+    // Example of zoom behavior
+    sigmaInstance.on('wheel', (event) => {
+        const delta = event.deltaY;
+        if (delta > 0) {
+            sigmaInstance.camera.zoom(0.9);
+        } else {
+            sigmaInstance.camera.zoom(1.1);
         }
+        sigmaInstance.refresh(); // Re-render after zoom
     });
-
-// Edge Event Handling
-
-// Handling click on edge
-    sigmaInstance.on('clickEdge', ({ edge, originalEvent }) => {
-        if (edge && edge.id) {
-            const edgeId = edge.id;
-            // Open edge details
-            openEdgeDetails(edgeId);
-        }
-    });
-
-// Handling enter on edge (e.g., highlighting it)
-    sigmaInstance.on('enterEdge', ({ edge }) => {
-        if (edge && edge.id) {
-            // Highlight the edge
-            highlightEdge(edge.id);
-        }
-    });
-
-// Handling leave on edge (e.g., resetting highlight)
-    sigmaInstance.on('leaveEdge', ({ edge }) => {
-        if (edge && edge.id) {
-            // Reset highlight on edge
-            resetEdgeHighlight(edge.id);
-        }
-    });
-
-// Handling wheel event on edge (e.g., zoom or pan)
-    sigmaInstance.on('wheelEdge', ({ edge, originalEvent }) => {
-        if (edge && edge.id) {
-            const zoomLevel = originalEvent.deltaY;
-            // Handle zoom for the specific edge
-            handleEdgeZoom(edge.id, zoomLevel);
-        }
-    });
-
 }
 
 
