@@ -1,5 +1,8 @@
-import { Sigma } from 'https://cdn.jsdelivr.net/npm/sigma@3.0.0/+esm';
-import { Graph } from 'https://cdn.jsdelivr.net/npm/graphology@0.25.4/+esm';
+import { Sigma } from 'https://cdn.jsdelivr.net/npm/sigma@3.0.0/+esm'
+import Graph from 'https://cdn.jsdelivr.net/npm/graphology@0.25.4/+esm';
+import EdgeCurveProgram from "https://cdn.jsdelivr.net/npm/@sigma/edge-curve@3.1.0/+esm";
+
+
 var $GP;
 
 // Create an empty graph using Graphology
@@ -7,12 +10,17 @@ let graph = new Graph();
 let container = document.getElementById('sigma-canvas');
 
 // Initialize Sigma instance using the new constructor
-const sigmaInstance = new Sigma(graph, container, {
+const renderer = new Sigma(graph, container, {
+    minCameraRatio: 0.08,
+    maxCameraRatio: 3,
     settings: {
         labelFont: 'Arial',
         labelSize: 14,
         defaultEdgeType: 'curve'
-    }
+    },
+    edgeProgramClasses: {
+        curve: EdgeCurveProgram,
+    },
 });
 
 // Load config.json and fetch the associated data.json file
@@ -56,25 +64,38 @@ function setupGraph(data) {
         graph.addEdge(edge.source, edge.target, {
             color: edge.color || '#000',
             size: edge.size || 1,
-            type: edge.type || 'line'
+            type: 'line'
         });
     });
 
-    sigmaInstance.refresh();
+    renderer.refresh();
     setupEvents(); // Set up events like click and hover for node
 }
 
 function setupEvents() {
     // Node click event
-    sigmaInstance.on('node:click', (event) => {
+    renderer.on('node:click', (event) => {
         const node = event.node;
         console.log(`Node clicked: ${node.id}`);
-        // Handle node click
-        alert(`Node clicked: ${node.id}`);
+
+        // Populate the info pane
+        $GP.info_name.text(node.label);
+        // Add logic to populate other attributes based on your data structure
+        $GP.info_data.html(/* ... */);
+
+        // Filter the graph to show only connected nodes
+        const neighbors = graph.neighbors(node.id);
+        graph.nodes().forEach(nodeId => {
+            node.hidden = !neighbors.includes(nodeId);
+        });
+        renderer.refresh();
+
+        $GP.intro.hide();
+        $GP.info.show();
     });
 
     // Node hover in event
-    sigmaInstance.on('node:enter', (event) => {
+    renderer.on('node:enter', (event) => {
         const node = event.node;
         console.log(`Node hovered: ${node.id}`);
         // Handle hover behavior
@@ -82,25 +103,30 @@ function setupEvents() {
     });
 
     // Node hover out event
-    sigmaInstance.on('node:leave', (event) => {
+    renderer.on('node:leave', (event) => {
         const node = event.node;
         console.log(`Node hover out: ${node.id}`);
         // Handle hover out behavior
         document.getElementById('tooltip').innerHTML = '';
     });
+    const zoomInButton = document.getElementById('zoomIn');
+    const zoomOutButton = document.getElementById('zoomOut');
+    const zoomCenterButton = document.getElementById('zoomCenter');
 
-    // Example of zoom behavior
-    sigmaInstance.on('wheel', (event) => {
-        const delta = event.deltaY;
-        if (delta > 0) {
-            sigmaInstance.camera.zoom(0.9);
-        } else {
-            sigmaInstance.camera.zoom(1.1);
-        }
-        sigmaInstance.refresh(); // Re-render after zoom
+    const camera = renderer.getCamera();
+
+    zoomInButton.addEventListener('click', () => {
+        camera.animatedZoom({ duration: 600 });
+    });
+
+    zoomOutButton.addEventListener('click', () => {
+        camera.animatedUnzoom({ duration: 600 });
+    });
+
+    zoomCenterButton.addEventListener('click', () => {
+        camera.animatedReset({ duration: 600 });
     });
 }
-
 
 function nodeNormal() {
     console.log("Resetting to normal state");
@@ -156,6 +182,16 @@ function setupGUI(config) {
 
     $GP.cluster = $GP.form.find("#attributeselect");
     config.GP = $GP;
+
+    // Search bar functionality
+    $GP.search.on('input', function() {
+        const query = $(this).val().toLowerCase();
+        graph.nodes().forEach(nodeId => {
+            const node = graph.getNodeAttributes(nodeId);
+            node.hidden = !node.label.toLowerCase().includes(query);
+        });
+        renderer.refresh();
+    });
 }
 
 // Utility function to get query string parameters
